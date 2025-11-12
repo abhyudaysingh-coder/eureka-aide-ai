@@ -26,15 +26,15 @@ export const Sidebar = () => {
   ];
 
   return (
-    <aside className="w-64 border-r bg-card flex flex-col">
-      <div className="p-6 border-b">
+    <aside className="w-64 glass border-r border-frosted flex flex-col bg-sidebar">
+      <div className="p-6 border-b border-frosted">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-md">
-            <Brain className="w-6 h-6 text-primary-foreground" />
+          <div className="w-10 h-10 rounded-xl gradient-primary flex items-center justify-center shadow-glow">
+            <Brain className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h2 className="font-bold text-lg">Study Buddy</h2>
-            <p className="text-xs text-muted-foreground">Learn smarter</p>
+            <h2 className="font-bold text-lg text-sidebar-foreground">Study Buddy</h2>
+            <p className="text-xs text-sidebar-foreground/70">Learn smarter</p>
           </div>
         </div>
       </div>
@@ -47,8 +47,8 @@ export const Sidebar = () => {
             className={({ isActive }) =>
               `flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                 isActive
-                  ? "bg-primary text-primary-foreground shadow-md"
-                  : "text-muted-foreground hover:bg-secondary hover:text-secondary-foreground"
+                  ? "gradient-primary text-white shadow-glow neon-glow"
+                  : "text-sidebar-foreground/70 hover:glass-intense hover:text-sidebar-foreground"
               }`
             }
           >
@@ -58,10 +58,10 @@ export const Sidebar = () => {
         ))}
       </nav>
 
-      <div className="p-4 border-t">
+      <div className="p-4 border-t border-frosted">
         <Button
           variant="outline"
-          className="w-full justify-start gap-3"
+          className="w-full justify-start gap-3 glass-intense border-frosted hover:bg-destructive/10"
           onClick={handleLogout}
         >
           <LogOut className="w-5 h-5" />

@@ -35,8 +35,10 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center gradient-hero">
-        <div className="text-xl text-white font-medium animate-pulse">Loading your workspace...</div>
+      <div className="min-h-screen flex items-center justify-center gradient-mesh particles">
+        <div className="glass rounded-2xl p-8 shadow-card">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent mx-auto" />
+        </div>
       </div>
     );
   }
@@ -47,18 +49,11 @@ const Dashboard = () => {
 
   return (
     <DashboardLayout>
-      <div className="space-y-8 px-4 py-8 lg:px-16 lg:py-12">
+      <div className="p-8 lg:p-16 space-y-8 max-w-7xl mx-auto animate-fade-in-up">
         <WelcomeBanner user={user} />
         <StatsCards />
-        
-        <div className="grid gap-6 lg:grid-cols-2">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <RecentNotes />
-          
-          {/* Due for Review Placeholder */}
-          <div className="glass rounded-xl p-8">
-            <h3 className="text-xl font-bold mb-4">Due for Review</h3>
-            <p className="text-muted-foreground">Your flashcards will appear here when they're ready for review.</p>
-          </div>
         </div>
       </div>
     </DashboardLayout>

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { GlassCard } from "@/components/ui/glass-card";
 import { BookOpen, FileText, Sparkles, TrendingUp } from "lucide-react";
 
 export const StatsCards = () => {
@@ -31,48 +31,43 @@ export const StatsCards = () => {
       title: "Total Notes",
       value: stats?.notes || 0,
       icon: BookOpen,
-      color: "text-primary",
-      bg: "bg-primary/10",
+      gradient: "from-blue-500 to-cyan-400",
     },
     {
       title: "Quizzes Created",
       value: stats?.quizzes || 0,
       icon: FileText,
-      color: "text-accent",
-      bg: "bg-accent/10",
+      gradient: "from-purple-500 to-pink-400",
     },
     {
       title: "Flashcards",
       value: stats?.flashcards || 0,
       icon: Sparkles,
-      color: "text-success",
-      bg: "bg-success/10",
+      gradient: "from-green-500 to-emerald-400",
     },
     {
       title: "Quiz Attempts",
       value: stats?.attempts || 0,
       icon: TrendingUp,
-      color: "text-destructive",
-      bg: "bg-destructive/10",
+      gradient: "from-orange-500 to-red-400",
     },
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
       {cards.map((card) => (
-        <Card key={card.title} className="hover:shadow-lg transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              {card.title}
-            </CardTitle>
-            <div className={`p-2 rounded-lg ${card.bg}`}>
-              <card.icon className={`w-4 h-4 ${card.color}`} />
+        <GlassCard key={card.title} className="relative overflow-hidden group">
+          <div className={`absolute inset-0 bg-gradient-to-br ${card.gradient} opacity-10 group-hover:opacity-20 transition-opacity`} />
+          <div className="relative p-6">
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-sm font-medium text-muted-foreground">{card.title}</span>
+              <div className={`p-3 rounded-xl bg-gradient-to-br ${card.gradient} shadow-lg`}>
+                <card.icon className="h-5 w-5 text-white" />
+              </div>
             </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold">{card.value}</div>
-          </CardContent>
-        </Card>
+            <div className="text-3xl font-bold tracking-tight">{card.value}</div>
+          </div>
+        </GlassCard>
       ))}
     </div>
   );

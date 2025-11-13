@@ -28,14 +28,14 @@ export const RecentNotes = () => {
   });
 
   return (
-    <Card>
+    <Card className="border-0">
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="flex items-center gap-2">
-          <BookOpen className="w-5 h-5" />
+        <CardTitle className="flex items-center gap-2 text-xl">
+          <BookOpen className="w-6 h-6" />
           Recent Notes
         </CardTitle>
         <Button
-          variant="outline"
+          variant="default"
           size="sm"
           onClick={() => navigate("/notes")}
           className="gap-2"
@@ -46,40 +46,51 @@ export const RecentNotes = () => {
       </CardHeader>
       <CardContent>
         {isLoading ? (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-16 bg-muted rounded-lg animate-pulse" />
+              <div key={i} className="h-20 glass-card rounded-2xl animate-pulse" />
             ))}
           </div>
         ) : notes && notes.length > 0 ? (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {notes.map((note) => (
               <div
                 key={note.id}
-                className="p-4 rounded-lg border bg-card hover:bg-secondary/50 transition-colors cursor-pointer group"
+                className="glass-card rounded-2xl p-5 hover-lift hover-glow cursor-pointer group relative overflow-hidden border-l-4 border-primary"
                 onClick={() => navigate(`/notes/${note.id}`)}
               >
-                <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  {/* File Icon with glow */}
+                  <div className="p-3 rounded-xl bg-primary/20 backdrop-blur-sm">
+                    <BookOpen className="w-5 h-5 text-primary" />
+                  </div>
+                  
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-medium truncate">{note.title}</h3>
+                    <h3 className="font-semibold text-lg truncate group-hover:text-primary transition-colors">
+                      {note.title}
+                    </h3>
                     <p className="text-sm text-muted-foreground truncate">
-                      {note.content.substring(0, 100)}...
+                      {note.content.substring(0, 80)}...
                     </p>
                     <p className="text-xs text-muted-foreground mt-1">
                       {formatDistanceToNow(new Date(note.created_at), { addSuffix: true })}
                     </p>
                   </div>
-                  <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                  
+                  <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all" />
                 </div>
+                
+                {/* Decorative glow */}
+                <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-primary/5 rounded-full blur-2xl" />
               </div>
             ))}
           </div>
         ) : (
-          <div className="text-center py-8">
-            <BookOpen className="w-12 h-12 text-muted-foreground mx-auto mb-3 opacity-50" />
-            <p className="text-muted-foreground mb-4">No notes yet</p>
-            <Button onClick={() => navigate("/notes")} className="gap-2">
-              <Plus className="w-4 h-4" />
+          <div className="text-center py-12 glass-card rounded-2xl">
+            <BookOpen className="w-16 h-16 text-muted-foreground mx-auto mb-4 opacity-50" />
+            <p className="text-muted-foreground mb-6 text-lg">No notes yet</p>
+            <Button onClick={() => navigate("/notes")} className="gap-2" size="lg">
+              <Plus className="w-5 h-5" />
               Create Your First Note
             </Button>
           </div>

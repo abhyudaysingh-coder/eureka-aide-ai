@@ -31,47 +31,51 @@ export const StatsCards = () => {
       title: "Total Notes",
       value: stats?.notes || 0,
       icon: BookOpen,
-      color: "text-primary",
-      bg: "bg-primary/10",
+      gradient: "from-primary to-primary-glow",
     },
     {
       title: "Quizzes Created",
       value: stats?.quizzes || 0,
       icon: FileText,
-      color: "text-accent",
-      bg: "bg-accent/10",
+      gradient: "from-accent to-purple-500",
     },
     {
       title: "Flashcards",
       value: stats?.flashcards || 0,
       icon: Sparkles,
-      color: "text-success",
-      bg: "bg-success/10",
+      gradient: "from-success to-emerald-400",
     },
     {
       title: "Quiz Attempts",
       value: stats?.attempts || 0,
       icon: TrendingUp,
-      color: "text-destructive",
-      bg: "bg-destructive/10",
+      gradient: "from-primary to-accent",
     },
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       {cards.map((card) => (
-        <Card key={card.title} className="hover:shadow-lg transition-shadow">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              {card.title}
-            </CardTitle>
-            <div className={`p-2 rounded-lg ${card.bg}`}>
-              <card.icon className={`w-4 h-4 ${card.color}`} />
+        <Card 
+          key={card.title} 
+          className={`bg-gradient-to-br ${card.gradient} shadow-glow hover:shadow-glow-strong hover-lift border-0 relative overflow-hidden`}
+        >
+          {/* Icon in top-left with glow */}
+          <div className="absolute top-4 left-4 p-3 rounded-full bg-white/20 backdrop-blur-sm">
+            <card.icon className="w-5 h-5 text-white" />
+          </div>
+          
+          <CardContent className="pt-20 pb-6">
+            <div className="text-5xl font-bold text-white mb-1">
+              {card.value}
             </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold">{card.value}</div>
+            <p className="text-white/80 text-sm font-medium">
+              {card.title}
+            </p>
           </CardContent>
+          
+          {/* Decorative glow */}
+          <div className="absolute -bottom-8 -right-8 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
         </Card>
       ))}
     </div>

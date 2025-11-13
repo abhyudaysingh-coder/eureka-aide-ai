@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
-import { WelcomeBanner } from "@/components/dashboard/WelcomeBanner";
+import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { StatsCards } from "@/components/dashboard/StatsCards";
 import { RecentNotes } from "@/components/dashboard/RecentNotes";
 
@@ -35,10 +35,8 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center gradient-mesh particles">
-        <div className="glass rounded-2xl p-8 shadow-card">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent mx-auto" />
-        </div>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-pulse text-lg text-muted-foreground">Loading...</div>
       </div>
     );
   }
@@ -49,12 +47,10 @@ const Dashboard = () => {
 
   return (
     <DashboardLayout>
-      <div className="p-8 lg:p-16 space-y-8 max-w-7xl mx-auto animate-fade-in-up">
-        <WelcomeBanner user={user} />
+      <div className="space-y-8">
+        <DashboardHeader user={user} />
         <StatsCards />
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <RecentNotes />
-        </div>
+        <RecentNotes />
       </div>
     </DashboardLayout>
   );

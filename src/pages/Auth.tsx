@@ -3,15 +3,17 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Mail, Lock, Sparkles, Check, Brain, Zap, Target } from "lucide-react";
+import { BookOpen, Brain, Sparkles } from "lucide-react";
 
 const Auth = () => {
+  const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [displayName, setDisplayName] = useState("");
   const [loading, setLoading] = useState(false);
-  const [isSignUp, setIsSignUp] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -20,16 +22,30 @@ const Auth = () => {
     setLoading(true);
 
     try {
-      if (isSignUp) {
-        const { data: authData, error } = await supabase.auth.signUp({ 
-          email, 
+      if (isLogin) {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+
+        if (error) throw error;
+
+        toast({
+          title: "Welcome back!",
+          description: "You've successfully signed in.",
+        });
+        navigate("/dashboard");
+      } else {
+        const { data: authData, error: authError } = await supabase.auth.signUp({
+          email,
           password,
           options: {
             emailRedirectTo: `${window.location.origin}/dashboard`,
           },
         });
-        if (error) throw error;
-        
+
+        if (authError) throw authError;
+
         if (authData.user) {
           const { error: profileError } = await supabase
             .from("profiles")
@@ -39,17 +55,13 @@ const Auth = () => {
             });
 
           if (profileError) throw profileError;
+
+          toast({
+            title: "Account created!",
+            description: "Welcome to Study Buddy!",
+          });
+          navigate("/dashboard");
         }
-        
-        toast({
-          title: "Success!",
-          description: "Welcome to Study Buddy!",
-        });
-        navigate("/dashboard");
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
-        navigate("/dashboard");
       }
     } catch (error: any) {
       toast({
@@ -63,141 +75,107 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen flex gradient-mesh particles">
-      {/* Left Hero Section */}
-      <div className="hidden lg:flex lg:w-1/2 relative items-center justify-center p-16">
-        <div className="max-w-2xl space-y-8 animate-fade-in-up">
-          <div className="inline-flex items-center px-4 py-2 rounded-full glass border-frosted mb-6">
-            <Sparkles className="w-4 h-4 mr-2 text-accent" />
-            <span className="text-sm font-medium">Powered by AI</span>
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-background via-background to-primary/5">
+      <div className="w-full max-w-md">
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent mb-4 shadow-lg">
+            <Brain className="w-8 h-8 text-primary-foreground" />
           </div>
-          
-          <h1 className="text-6xl font-bold text-gradient leading-tight">
-            Study Smarter with AI
-          </h1>
-          
-          <p className="text-xl text-muted-foreground leading-relaxed">
-            Transform your learning with AI-powered summaries, intelligent quizzes, 
-            and adaptive flashcards. Your personal study companion that grows with you.
-          </p>
-          
-          <div className="space-y-4 pt-8">
-            {[
-              { icon: Brain, text: "AI-Powered Summaries" },
-              { icon: Zap, text: "Instant Quiz Generation" },
-              { icon: Target, text: "Smart Flashcards" },
-              { icon: Sparkles, text: "Personalized Learning" }
-            ].map((feature, i) => (
-              <div 
-                key={i} 
-                className="flex items-center space-x-3 animate-slide-up"
-                style={{ animationDelay: `${i * 0.1}s` }}
-              >
-                <div className="w-10 h-10 rounded-full gradient-primary flex items-center justify-center shadow-glow">
-                  <Check className="w-5 h-5 text-white" />
-                </div>
-                <span className="text-lg font-medium">{feature.text}</span>
-              </div>
-            ))}
-          </div>
-
-          {/* Floating 3D shapes */}
-          <div className="absolute top-20 left-20 w-32 h-32 rounded-lg gradient-accent opacity-20 blur-2xl animate-float" />
-          <div className="absolute bottom-20 right-20 w-40 h-40 rounded-full gradient-primary opacity-20 blur-3xl animate-float" style={{ animationDelay: "1s" }} />
+          <h1 className="text-3xl font-bold mb-2">Study Buddy</h1>
+          <p className="text-muted-foreground">AI-powered learning companion</p>
         </div>
-      </div>
 
-      {/* Right Login Form Section */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
-        <div className="w-full max-w-md space-y-8 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
-          {/* Logo */}
-          <div className="text-center">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full gradient-primary shadow-glow-primary mb-4">
-              <span className="text-2xl font-bold text-white">SB</span>
-            </div>
-            <h2 className="text-3xl font-bold text-gradient">Study Buddy</h2>
-            <p className="text-muted-foreground mt-2">
-              {isSignUp ? "Create your account" : "Welcome back"}
-            </p>
-          </div>
-
-          {/* Login Form */}
-          <form onSubmit={handleAuth} className="glass rounded-2xl p-8 shadow-card hover-lift">
-            <div className="space-y-6">
-              {isSignUp && (
+        <Card className="shadow-xl">
+          <CardHeader>
+            <CardTitle>{isLogin ? "Welcome Back" : "Create Account"}</CardTitle>
+            <CardDescription>
+              {isLogin
+                ? "Sign in to continue your learning journey"
+                : "Join thousands of students learning smarter"}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleAuth} className="space-y-4">
+              {!isLogin && (
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Display Name</label>
+                  <Label htmlFor="displayName">Display Name</Label>
                   <Input
-                    type="text"
+                    id="displayName"
                     placeholder="John Doe"
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
-                    className="h-12 glass border-frosted"
                     required
                   />
                 </div>
               )}
-              
+
               <div className="space-y-2">
-                <label className="text-sm font-medium">Email</label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                  <Input
-                    type="email"
-                    placeholder="your@email.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10 h-12 glass border-frosted"
-                    required
-                  />
-                </div>
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium">Password</label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-                  <Input
-                    type="password"
-                    placeholder="••••••••"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10 h-12 glass border-frosted"
-                    required
-                    minLength={6}
-                  />
-                </div>
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  minLength={6}
+                />
               </div>
 
-              <Button
-                type="submit"
-                disabled={loading}
-                className="w-full h-12 gradient-primary text-white font-medium shadow-glow-primary hover:shadow-intense transition-all"
-              >
-                {loading ? "Loading..." : isSignUp ? "Sign Up" : "Sign In"}
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? "Loading..." : isLogin ? "Sign In" : "Create Account"}
               </Button>
-            </div>
-          </form>
 
-          <div className="text-center">
-            <p className="text-sm text-muted-foreground">
-              {isSignUp ? "Already have an account?" : "Don't have an account?"}{" "}
-              <button
-                onClick={() => setIsSignUp(!isSignUp)}
-                className="font-medium text-primary hover:text-accent transition-colors"
-              >
-                {isSignUp ? "Sign in" : "Sign up"}
-              </button>
-            </p>
-          </div>
+              <div className="text-center pt-4">
+                <button
+                  type="button"
+                  onClick={() => setIsLogin(!isLogin)}
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  {isLogin ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
+                </button>
+              </div>
+            </form>
 
-          {/* Demo credentials */}
-          <div className="glass rounded-lg p-4 border-frosted">
-            <p className="text-xs text-muted-foreground text-center font-mono">
-              Demo: demo@example.com / password123
-            </p>
-          </div>
-        </div>
+            {!isLogin && (
+              <div className="mt-6 pt-6 border-t space-y-3">
+                <div className="flex items-start gap-3 text-sm">
+                  <BookOpen className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-medium">Smart Notes</p>
+                    <p className="text-muted-foreground text-xs">Upload and organize your study materials</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 text-sm">
+                  <Sparkles className="w-5 h-5 text-accent shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-medium">AI Summaries</p>
+                    <p className="text-muted-foreground text-xs">Get instant summaries of your notes</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 text-sm">
+                  <Brain className="w-5 h-5 text-success shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-medium">Auto-Generated Quizzes</p>
+                    <p className="text-muted-foreground text-xs">Test your knowledge with AI quizzes</p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

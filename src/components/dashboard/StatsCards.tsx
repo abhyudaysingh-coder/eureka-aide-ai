@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { GlassCard } from "@/components/ui/glass-card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BookOpen, FileText, Sparkles, TrendingUp } from "lucide-react";
 
 export const StatsCards = () => {
@@ -31,43 +31,48 @@ export const StatsCards = () => {
       title: "Total Notes",
       value: stats?.notes || 0,
       icon: BookOpen,
-      gradient: "from-blue-500 via-blue-600 to-cyan-500",
+      color: "text-primary",
+      bg: "bg-primary/10",
     },
     {
       title: "Quizzes Created",
       value: stats?.quizzes || 0,
       icon: FileText,
-      gradient: "from-purple-500 via-purple-600 to-pink-500",
+      color: "text-accent",
+      bg: "bg-accent/10",
     },
     {
       title: "Flashcards",
       value: stats?.flashcards || 0,
       icon: Sparkles,
-      gradient: "from-green-500 via-emerald-600 to-teal-500",
+      color: "text-success",
+      bg: "bg-success/10",
     },
     {
       title: "Quiz Attempts",
       value: stats?.attempts || 0,
       icon: TrendingUp,
-      gradient: "from-orange-500 via-red-500 to-rose-500",
+      color: "text-destructive",
+      bg: "bg-destructive/10",
     },
   ];
 
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-      {cards.map((card, i) => (
-        <GlassCard key={card.title} className="relative overflow-hidden group hover-lift animate-slide-up" style={{ animationDelay: `${i * 0.1}s` }}>
-          <div className={`absolute inset-0 bg-gradient-to-br ${card.gradient} opacity-5 group-hover:opacity-15 transition-opacity`} />
-          <div className="relative p-6">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-sm font-medium text-muted-foreground">{card.title}</span>
-              <div className={`p-3 rounded-xl bg-gradient-to-br ${card.gradient} shadow-glow animate-pulse-glow`}>
-                <card.icon className="h-5 w-5 text-white" />
-              </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      {cards.map((card) => (
+        <Card key={card.title} className="hover:shadow-lg transition-shadow">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              {card.title}
+            </CardTitle>
+            <div className={`p-2 rounded-lg ${card.bg}`}>
+              <card.icon className={`w-4 h-4 ${card.color}`} />
             </div>
-            <div className="text-4xl font-bold tracking-tight text-gradient">{card.value}</div>
-          </div>
-        </GlassCard>
+          </CardHeader>
+          <CardContent>
+            <div className="text-3xl font-bold">{card.value}</div>
+          </CardContent>
+        </Card>
       ))}
     </div>
   );

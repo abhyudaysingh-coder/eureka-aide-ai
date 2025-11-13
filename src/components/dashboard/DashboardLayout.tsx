@@ -10,7 +10,9 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     <div className="min-h-screen bg-background flex">
       <Sidebar />
       <main className="flex-1 overflow-auto">
-        {children}
+        <div className="container max-w-7xl mx-auto p-6 lg:p-8">
+          {children}
+        </div>
       </main>
     </div>
   );

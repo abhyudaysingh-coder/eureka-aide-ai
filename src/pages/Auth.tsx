@@ -6,7 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { BookOpen, Brain, Sparkles } from "lucide-react";
+import { Brain, BookOpen, Sparkles } from "lucide-react";
+import { ParticleBackground } from "@/components/ParticleBackground";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -75,13 +76,14 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-background via-background to-primary/5">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent mb-4 shadow-lg">
-            <Brain className="w-8 h-8 text-primary-foreground" />
+    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-background via-background to-primary/5 relative overflow-hidden">
+      <ParticleBackground />
+      <div className="w-full max-w-md relative z-10">
+        <div className="text-center mb-8 animate-fade-in-up">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl gradient-bg mb-4 shadow-glow animate-pulse-glow">
+            <Brain className="w-8 h-8 text-white" />
           </div>
-          <h1 className="text-3xl font-bold mb-2">Study Buddy</h1>
+          <h1 className="text-4xl font-bold mb-2 text-gradient">Study Buddy</h1>
           <p className="text-muted-foreground">AI-powered learning companion</p>
         </div>
 

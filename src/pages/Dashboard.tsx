@@ -6,6 +6,11 @@ import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { WelcomeBanner } from "@/components/dashboard/WelcomeBanner";
 import { StatsCards } from "@/components/dashboard/StatsCards";
 import { RecentNotes } from "@/components/dashboard/RecentNotes";
+import { AnalyticsCards } from "@/components/dashboard/AnalyticsCards";
+import { ActivityHeatmap } from "@/components/dashboard/ActivityHeatmap";
+import { PerformanceChart } from "@/components/dashboard/PerformanceChart";
+import { StreakTracker } from "@/components/dashboard/StreakTracker";
+import { AchievementBadges } from "@/components/dashboard/AchievementBadges";
 
 const Dashboard = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -51,9 +56,22 @@ const Dashboard = () => {
     <DashboardLayout>
       <div className="p-8 lg:p-16 space-y-8 max-w-7xl mx-auto animate-fade-in-up">
         <WelcomeBanner user={user} />
+        
         <StatsCards />
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <RecentNotes />
+        
+        <AnalyticsCards />
+        
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2 space-y-8">
+            <PerformanceChart />
+            <ActivityHeatmap />
+            <RecentNotes />
+          </div>
+          
+          <div className="space-y-8">
+            <StreakTracker />
+            <AchievementBadges />
+          </div>
         </div>
       </div>
     </DashboardLayout>
